@@ -19,7 +19,7 @@ def sendSparkGET(message_id):
         response = requests.get(
             url="https://api.ciscospark.com/v1/messages/" + message_id,
             headers={
-                "Authorization": "Bearer <token>",
+                "Authorization": "Bearer " +bearer,
                 "Content-Type": "application/json; charset=utf-8",
             },
         )
@@ -42,6 +42,7 @@ def sendSparkPOST(url, data):
                                      "Content-Type":"application/json"})
     request.add_header("Authorization", "Bearer "+bearer)
     contents = urllib2.urlopen(request).read()
+    print contents
     return contents
 
 
@@ -58,13 +59,14 @@ def index(request):
     """
     webhook = json.loads(request.body)
     print webhook['data']['id']
-    print('https://api.ciscospark.com/v1/messages/')
-    print('https://api.ciscospark.com/v1/messages/{0}'.format(webhook['data']['id']))
+    #print('https://api.ciscospark.com/v1/messages/')
+    #print('https://api.ciscospark.com/v1/messages/{0}'.format(webhook['data']['id']))
     result = sendSparkGET(webhook['data']['id'])
     result = json.loads(result)
     print "JSON COMING >>>>>>>"
-    print result
+    #print result
     msg = None
+    print webhook['data']['roomId']
     if webhook['data']['personEmail'] != bot_email:
         in_message = result.get('text', '').lower()
         in_message = in_message.replace(bot_name, '')
@@ -86,8 +88,8 @@ def index(request):
 
 
 ####CHANGE THESE VALUES#####
-bot_email = "recapbot@sparkbot.io"
+bot_email = "recapbot@gmail.com"
 bot_name = "recapbot"
-bearer = "<token>"
+bearer = "OGM2MjljMzMtZTZiYS00YTc2LWJmOTUtZGFjNWY0YmZkZDUwZTlkNTg2N2QtNWUy"
 bat_signal  = "https://upload.wikimedia.org/wikipedia/en/c/c6/Bat-signal_1989_film.jpg"
 run_itty(server='wsgiref', host='127.0.0.1', port=8080)
