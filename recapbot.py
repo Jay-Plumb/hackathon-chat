@@ -3,7 +3,7 @@ import urllib2
 import requests
 import json
 from process_messages import process
-def getMessages(room_id):
+def getMessages(room_id,):
     print("ROOM:")
     try:
         response = requests.get(
@@ -95,6 +95,7 @@ def index(request):
     /batsignal - replies to the room with an image
     """
     webhook = json.loads(request.body)
+
     #print "web"
     #print webhook['data']['roomId']
     #print webhook['data']['id']
@@ -102,24 +103,38 @@ def index(request):
     #print('https://api.ciscospark.com/v1/messages/{0}'.format(webhook['data']['id']))
 
     #result = sendSparkGET(webhook['data']['id'])
-    result = getMessages(webhook['data']['roomId'])
-    # result = getMessages(webhook['data']['roomId'])
-    result = json.loads(result)
-    with open('unprocessed.json', 'w') as outfile:
-        json.dump(result, outfile)
-   
-    messages = process('unprocessed.json')
+    
+    if webhook["data"]["personEmail"] != bot_email:
+        result = getMessages(webhook['data']['roomId'])
+    
 
-    for item in messages["items"]:
-        print "DEBUG:"
-        #print item
-        sendSparkPOST("https://api.ciscospark.com/v1/messages/", {"roomId": webhook['data']['roomId'], "text": item["markdown"]})
-        #break
-        #postMessage(webhook['data']['roomId'], item["markdown"]);
+        # result = getMessages(webhook['data']['roomId'])
+        data = []
+        result = json.loads(result)
+        filtered_data = {"items": data}
+
+        for item in result["items"]:
+             if item['personEmail'] != bot_email or item['text'].find("recapbot") == -1:
+                print("**************")
+                print(item)
+                filtered_data["items"].append(item)
+     
+        with open('unprocessed.json', 'w') as outfile:
+            json.dump(filtered_data, outfile)
+       
+        messages = process('unprocessed.json')
+
+        for item in messages["items"]:
+            print "DEBUG:"
+            #print item
+            sendSparkPOST("https://api.ciscospark.com/v1/messages/", {"roomId": webhook['data']['roomId'], "markdown": item["markdown"]})
+            #break
+            #postMessage(webhook['data']['roomId'], item["markdown"]);
 
 
-    with open('processed.json', 'w') as outfile:
-        json.dump(messages, outfile)
+        with open('processed.json', 'w') as outfile:
+            json.dump(messages, outfile)
+    
     return "true"
 
 
