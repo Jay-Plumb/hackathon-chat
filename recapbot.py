@@ -114,13 +114,10 @@ def index(request):
         filtered_data = {"items": data}
 
         for item in result["items"]:
-            recapbotstr=str(item['text'])
-            if (str(item['personEmail']) != bot_email):
-                if (recapbotstr != bot_name):
-                    print("**************")
-                    print(item)
+            
+            if (item['personEmail'] != bot_email):
+                if (item['text'] != bot_name):
                     filtered_data["items"].append(item)
-     
         with open('unprocessed.json', 'w') as outfile:
             json.dump(filtered_data, outfile)
        
