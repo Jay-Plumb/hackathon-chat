@@ -7,7 +7,7 @@ def getMessages(room_id,):
     print("ROOM:")
     try:
         response = requests.get(
-            url="https://api.ciscospark.com/v1/messages/?roomId=" + room_id,
+            url="https://api.ciscospark.com/v1/messages/?roomId=" + room_id + "&max=1000",
             headers={
                 "Authorization": "Bearer " +bearer,
                 "Content-Type": "application/json; charset=utf-8",
@@ -114,16 +114,18 @@ def index(request):
         filtered_data = {"items": data}
 
         for item in result["items"]:
-             if item['personEmail'] != bot_email or item['text'].find("recapbot") == -1:
-                print("**************")
-                print(item)
-                filtered_data["items"].append(item)
+            recapbotstr=str(item['text'])
+            if (str(item['personEmail']) != bot_email):
+                if (recapbotstr != bot_name):
+                    print("**************")
+                    print(item)
+                    filtered_data["items"].append(item)
      
         with open('unprocessed.json', 'w') as outfile:
             json.dump(filtered_data, outfile)
        
         messages = process('unprocessed.json')
-
+        messages["items"].reverse()
         for item in messages["items"]:
             print "DEBUG:"
             #print item
