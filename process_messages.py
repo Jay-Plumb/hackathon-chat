@@ -1,13 +1,14 @@
-def process(data):
+import pickle
+from nltk import word_tokenize, WordNetLemmatizer
+from nltk.corpus import stopwords
+from collections import Counter
+import json
+def process(json_data):
     # Classifies messages in JSON file as being either on-topic, off-topic, or undecided
     # Inputs: JSON file
     # Output: JSON file with markdowns
 
-    import pickle
-    from nltk import word_tokenize, WordNetLemmatizer
-    from nltk.corpus import stopwords
-    from collections import Counter
-    import json
+ 
     # import requests
 
     def preprocess(sentence):
@@ -27,8 +28,7 @@ def process(data):
     # load stoplist and lemmatizer
     stoplist = stopwords.words('english')
     wordnet_lemmatizer = WordNetLemmatizer()
-    data = json.loads(open('example.json').read())
-
+    data = json.loads(open(json_data).read())
     # classify text
     messages = []
     labels = []

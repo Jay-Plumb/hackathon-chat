@@ -2,7 +2,7 @@ from itty import *
 import urllib2
 import requests
 import json
-
+from process_messages import process
 def getMessages(room_id):
     print("ROOM:")
     try:
@@ -20,6 +20,23 @@ def getMessages(room_id):
     except requests.exceptions.RequestException:
         print('HTTP Request failed')
     return response.content
+
+def postMessage(room_id, item):
+
+    try:
+        response = requests.post(
+            url="https://api.ciscospark.com/v1/messages/?roomId=" + room_id,
+            headers={
+                "Authorization": "Bearer " +bearer,
+                "Content-Type": "application/json; charset=utf-8"
+            }, data = {'markdown': item})
+        
+        print('Response HTTP Status Code: {status_code}'.format(
+            status_code=response.status_code))
+        print('Response HTTP Response Body: {content}'.format(
+            content=response.content))
+    except requests.exceptions.RequestException:
+        print('HTTP Request failed')
 
 
 def sendSparkGET(message_id):
@@ -55,9 +72,11 @@ def sendSparkPOST(url, data):
     This method is used for:
         -posting a message to the Spark room to confirm that a command was received and processed
     """
+    # print "DATA:"
+    # print data
     request = urllib2.Request(url, json.dumps(data),
-                            headers={"Accept" : "application/json",
-                                     "Content-Type":"application/json"})
+                             headers={"Accept" : "application/json",
+                                      "Content-Type":"application/json"})
     request.add_header("Authorization", "Bearer "+bearer)
     contents = urllib2.urlopen(request).read()
     #print contents
@@ -76,9 +95,9 @@ def index(request):
     /batsignal - replies to the room with an image
     """
     webhook = json.loads(request.body)
-    print "web"
-    print webhook['data']['roomId']
-    print webhook['data']['id']
+    #print "web"
+    #print webhook['data']['roomId']
+    #print webhook['data']['id']
     #print('https://api.ciscospark.com/v1/messages/')
     #print('https://api.ciscospark.com/v1/messages/{0}'.format(webhook['data']['id']))
 
@@ -86,33 +105,21 @@ def index(request):
     result = getMessages(webhook['data']['roomId'])
     # result = getMessages(webhook['data']['roomId'])
     result = json.loads(result)
-    
-    #print webhook['data']['roomId']
-    #print result
-    # msg = None
-    # if webhook['data']['personEmail'] != bot_email:
-    #     #json.loads(getMessages(webhook['data']['roomId']))
-    #     print "TEST: \n" 
-    #     print result
-    #     in_message = result.get('text', '').lower()
-    #     in_message = in_message.replace(bot_name, '')
-    #     if 'm' in in_message or "whoareyou" in in_message:
-    #        # print getMessages(webhook['data']['roomId'])
+    with open('unprocessed.json', 'w') as outfile:
+        json.dump(result, outfile)
+   
+    messages = process('unprocessed.json')
 
-    #         msg = "Robot response!"
+    for item in messages["items"]:
+        print "DEBUG:"
+        #print item
+        sendSparkPOST("https://api.ciscospark.com/v1/messages/", {"roomId": webhook['data']['roomId'], "text": item["markdown"]})
+        #break
+        #postMessage(webhook['data']['roomId'], item["markdown"]);
 
-    #     elif 'batcave' in in_message:
-    #         message = result.get('text').split('batcave')[1].strip(" ")
-    #         if len(message) > 0:
-    #             msg = "The Batcave echoes, '{0}'".format(message)
-    #         else:
-    #             msg = "The Batcave is silent..."
-    #     elif 'batsignal' in in_message:
-    #         print "NANA NANA NANA NANA"
-    #         sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "files": bat_signal})
-    #     if msg != None:
-    #         print msg
-    #         sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "text": msg})
+
+    with open('processed.json', 'w') as outfile:
+        json.dump(messages, outfile)
     return "true"
 
 
