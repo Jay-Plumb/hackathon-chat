@@ -41,7 +41,7 @@ def process(json_data):
         prob_off = prob_dist.prob('off')
         if prob_on >= 0.5 and prob_off <= 0.5:
             label = '1'
-            item["markdown"] = "<h1>" + message + "</h1>"
+            item["markdown"] = "# " + message + "\n"
         elif prob_on <= 0.5 and prob_off >= 0.5:
             label = '3'
             item["markdown"] = "### " + message + "\n"
