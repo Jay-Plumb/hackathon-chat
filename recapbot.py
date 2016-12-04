@@ -3,6 +3,24 @@ import urllib2
 import requests
 import json
 
+def getMessages(room_id):
+    print("ROOM:")
+    try:
+        response = requests.get(
+            url="https://api.ciscospark.com/v1/messages/?roomId=" + room_id,
+            headers={
+                "Authorization": "Bearer " +bearer,
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        )
+        print('Response HTTP Status Code: {status_code}'.format(
+            status_code=response.status_code))
+        print('Response HTTP Response Body: {content}'.format(
+            content=response.content))
+    except requests.exceptions.RequestException:
+        print('HTTP Request failed')
+    return response.content
+
 
 def sendSparkGET(message_id):
     """
@@ -42,7 +60,7 @@ def sendSparkPOST(url, data):
                                      "Content-Type":"application/json"})
     request.add_header("Authorization", "Bearer "+bearer)
     contents = urllib2.urlopen(request).read()
-    print contents
+    #print contents
     return contents
 
 
@@ -58,32 +76,43 @@ def index(request):
     /batsignal - replies to the room with an image
     """
     webhook = json.loads(request.body)
+    print "web"
+    print webhook['data']['roomId']
     print webhook['data']['id']
     #print('https://api.ciscospark.com/v1/messages/')
     #print('https://api.ciscospark.com/v1/messages/{0}'.format(webhook['data']['id']))
-    result = sendSparkGET(webhook['data']['id'])
+
+    #result = sendSparkGET(webhook['data']['id'])
+    result = getMessages(webhook['data']['roomId'])
+    # result = getMessages(webhook['data']['roomId'])
     result = json.loads(result)
-    print "JSON COMING >>>>>>>"
+    
+    #print webhook['data']['roomId']
     #print result
-    msg = None
-    print webhook['data']['roomId']
-    if webhook['data']['personEmail'] != bot_email:
-        in_message = result.get('text', '').lower()
-        in_message = in_message.replace(bot_name, '')
-        if 'batman' in in_message or "whoareyou" in in_message:
-            msg = "I'm Batman!"
-        elif 'batcave' in in_message:
-            message = result.get('text').split('batcave')[1].strip(" ")
-            if len(message) > 0:
-                msg = "The Batcave echoes, '{0}'".format(message)
-            else:
-                msg = "The Batcave is silent..."
-        elif 'batsignal' in in_message:
-            print "NANA NANA NANA NANA"
-            sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "files": bat_signal})
-        if msg != None:
-            print msg
-            sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "text": msg})
+    # msg = None
+    # if webhook['data']['personEmail'] != bot_email:
+    #     #json.loads(getMessages(webhook['data']['roomId']))
+    #     print "TEST: \n" 
+    #     print result
+    #     in_message = result.get('text', '').lower()
+    #     in_message = in_message.replace(bot_name, '')
+    #     if 'm' in in_message or "whoareyou" in in_message:
+    #        # print getMessages(webhook['data']['roomId'])
+
+    #         msg = "Robot response!"
+
+    #     elif 'batcave' in in_message:
+    #         message = result.get('text').split('batcave')[1].strip(" ")
+    #         if len(message) > 0:
+    #             msg = "The Batcave echoes, '{0}'".format(message)
+    #         else:
+    #             msg = "The Batcave is silent..."
+    #     elif 'batsignal' in in_message:
+    #         print "NANA NANA NANA NANA"
+    #         sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "files": bat_signal})
+    #     if msg != None:
+    #         print msg
+    #         sendSparkPOST("https://api.ciscospark.com/v1/messages", {"roomId": webhook['data']['roomId'], "text": msg})
     return "true"
 
 
