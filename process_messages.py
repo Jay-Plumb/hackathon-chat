@@ -39,15 +39,21 @@ def process(json_data):
         prob_dist = classifier.prob_classify(fs)
         prob_on = prob_dist.prob('on')
         prob_off = prob_dist.prob('off')
-        if prob_on >= 0.5 and prob_off <= 0.5:
+        if prob_on >= 0.6 and prob_off <= 0.4:
             label = '1'
-            item["markdown"] = "# " + message + "\n"
-        elif prob_on <= 0.5 and prob_off >= 0.5:
-            label = '3'
-            item["markdown"] = "### " + message + "\n"
-        else:
+            item["markdown"] = "#** " + message + "\n"
+        elif prob_on >= 0.5 and prob_off <= 0.5:
             label = '2'
             item["markdown"] = "## " + message + "\n"
+        elif prob_on <= 0.4 and prob_off >= 0.6:
+            label = '4'
+            item["markdown"] = message + "\n"
+        elif prob_on <= 0.5 and prob_off >= 0.5:
+            label = '3'
+            item["markdown"] = message + "\n"
+        else:
+            label = '5'
+            item["markdown"] = "### " + message + "\n"
         item["label"] = label
 
     return data
