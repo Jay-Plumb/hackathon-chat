@@ -1,4 +1,4 @@
-### RecapBot
+# RecapBot
 
 ## Problem
 Have you ever been in a group chat and want to be able to filter through the relevant information? Our recapbot uses a machine learning algorithm (bayes filter) to classify relevant from non relevant sentences.
