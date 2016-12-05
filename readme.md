@@ -11,6 +11,8 @@ Have you ever been in a group chat and want to be able to filter through the rel
 ## Setup
 A bot was created in spark and an ngrok tunnel was used to the webhook. A learning algorithm classifies the sentences and the size of the text it altered (the larger the font, the more relevant the information).
 
+To run the setup, please do the following:
+
 1. In terminal, call `ngrok http <portNumber>`
 2. Generate webhook using [Spark for Developers website](https://developer.ciscospark.com/endpoint-webhooks-post.html)
   * In 'Request Headers', change Authorization to Bearer Token of the bot
