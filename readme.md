@@ -9,7 +9,7 @@ The bot uses a webhook which is connected to a local server through an *ngrok* t
 ###Built With
 This bot uses the following technologies:
 * [Cisco Spark REST API](https://developer.ciscospark.com/)
-* [Natural Language Toolkit](www.nltk.org/)
+* [Natural Language Toolkit](http://www.nltk.org/)
 * [ngrok](https://ngrok.com/)
 * Python version 2.7
 
