@@ -26,13 +26,14 @@ To run the setup, please do the following:
 4. In another terminal, run **_recapbot.py_**  
       `python recapbot.py`
 5. In a Cisco Spark room, add *recapbot* through "Add people" (e-mail: recapbot@gmail.com) and message *recapbot* using:  
-      `@recapbot`
+      `@recapbot`  
+  - The bot currently has the following functionalities: '/help' and '/max'  
+	(if '/max' called, please add an integer with a space after to specify the max number of messages filtered)
+  - Calling the bot without any other parameters, filters all messages in the room
 
 ##Future Implementations
 In the future, the following functionalities will be added to the bot:
   * Get the summary of messages within a specific time period
-  * Using `@recapbot /start` to summarise all messages in the current room
-  * Adding extra parameters to limit the number of messages outputted by bot after summarisation
   * Output the messages in a specific file format or in another room
 
 ##Motivation
