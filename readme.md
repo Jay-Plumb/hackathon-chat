@@ -1,19 +1,19 @@
-#RecapBot
+# RecapBot
 
-##Problem
+## Problem
 Have you ever been in a group chat and wanted to be able to extract relevant information? Our bot, *recapbot*, uses a machine learning algorithm (Naive Bayes filter) to classify relevant from non relevant messages.
 
-##Description
+## Description
 The bot uses a webhook which is connected to a local server through an *ngrok* tunnel. When a user calls '`@recapbot`' within a specific room, the webhook notifies the server and this causes messages within the room to be passed to the server. A learning algorithm then classifies the messages and adds a specific markdown to each message (the larger the font, the more relevant the information). Finally, the bot outputs the messages back into the room where it was called.
 
-###Built With
+### Built With
 This bot uses the following technologies:
 * [Cisco Spark REST API](https://developer.ciscospark.com/)
 * [Natural Language Toolkit](http://www.nltk.org/)
 * [ngrok](https://ngrok.com/)
 * Python version 2.7
 
-##Deployment
+## Deployment
 To run the setup, please do the following:
 
 1. Clone files and download relevant packages
@@ -31,18 +31,18 @@ To run the setup, please do the following:
 	(if '/max' called, please add an integer with a space after to specify the max number of messages filtered)
   - Calling the bot without any other parameters, filters all messages in the room
 
-##Future Implementations
+## Future Implementations
 In the future, the following functionalities will be added to the bot:
   * Get the summary of messages within a specific time period
   * Output the messages in a specific file format or in another room
 
-##Motivation
+## Motivation
 This bot was created for the TechCrunch Disrupt London 2016 Hackathon (3rd-4th December 2016).
 It uses the Cisco Spark API and is used in Cisco Spark rooms.
 
 Winner of the Cisco Spark API prize.
 
-##Authors
+## Authors
 Team Recap:
   - Adrian C.
   - Aydan G.
@@ -50,7 +50,7 @@ Team Recap:
   - Nicholas K.
   - Thomas G.
 
-##Acknowledgements
+## Acknowledgements
 Many thanks to the entire Cisco TechCrunch Spark team (Steve S., Casey B., Ryan W., Jonathan F.) for the support during the entire hackathon and for making the bot possible.
 
 We would also like to thank TechCrunch for organising the hackathon.
